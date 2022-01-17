@@ -9,21 +9,30 @@ public class PlayerMove : MonoBehaviour
     public Animator anim;
     public GameObject cam;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    // Update is called once per frame
     void Update()
     {
         cam.transform.position = new Vector3(transform.position.x, transform.position.y, cam.transform.position.z);
-        rb.velocity = new Vector2(MoveSpeed * Input.GetAxisRaw("Horizontal"), MoveSpeed * Input.GetAxisRaw("Vertical"));
+
+        if (Input.GetAxisRaw("Horizontal") != 0 && Input.GetAxisRaw("Vertical") != 0)
+        {
+            rb.velocity = new Vector2(MoveSpeed * 0.6f * Input.GetAxisRaw("Horizontal"), MoveSpeed * 0.6f * Input.GetAxisRaw("Vertical"));
+        }
+        else
+        {
+            rb.velocity = new Vector2(MoveSpeed * Input.GetAxisRaw("Horizontal"), MoveSpeed * Input.GetAxisRaw("Vertical"));
+        }
+        
+
         if((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || anim.GetCurrentAnimatorStateInfo(0).IsName("Walk")))
         {
             anim.SetBool("Walking", true);
         }
+
         else if((Input.GetAxisRaw("Horizontal") == 0 || Input.GetAxisRaw("Vertical") == 0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Walk"))
         {
             anim.SetBool("Walking", false);
